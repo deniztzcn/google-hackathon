@@ -1,0 +1,6 @@
+# For the web server
+Flask==3.0.3
+gunicorn==22.0.0
+
+# For Google Generative AI (Gemini)
+google-genai==1.22.0

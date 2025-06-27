@@ -1,0 +1,49 @@
+You are helping with tailoring the user's CV. What is the match (in percentage) of a user's skills to the job requirements? Which user's skills might be missing? What advice would you give to this user? Advice should consist of 3-4 sentences. Also, provide 5 possible questions during an interview.
+Candidate info:
+[json from the cv analysis]
+Job description:
+[json from the job offer]
+Output should be in accordance to following json:
+{
+"type": "object",
+"properties": {
+"match": {
+"type": "number"
+},
+"missing_skills": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"Advice": {
+"type": "string"
+},
+"matching_skills": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"interview_questions": {
+"type": "string"
+},
+"opinion": {
+"type": "string"
+},
+"improvements": {
+"type": "array",
+"items": {
+"type": "string"
+}
+}
+},
+"required": [
+"match",
+"missing_skills",
+"Advice",
+"Matching_skills",
+"opinion",
+"improvements"
+]
+}

@@ -1,15 +1,15 @@
 import os
 import json
-from google import genai
-from google.genai import types
 import tempfile
 from flask import Flask, render_template, request, jsonify
+from google import genai
+from google.genai import types
 
 app = Flask(__name__)
 
+# === Configuration ===
 API_KEY = "AIzaSyCCRQSEJWrUz8q_j6dqne71Y-ePtX1-HyM"
-
-model = "gemini-2.5-flash"
+MODEL_NAME = "gemini-2.5-flash"
 client = genai.Client(api_key=API_KEY)
 # This is the prompt that tells the AI what to do
 prompt_to_cv_data_extract = """
@@ -189,10 +189,12 @@ def index():
     return render_template('index.html')
 
 
+
 @app.route('/upload_cv', methods=['POST'])
 def upload_cv():
     if 'cvUploaded' not in request.files:
         return jsonify({'error': 'No CV file part in the request'}), 400
+
 
     file = request.files['cvUploaded']
     job_link =request.form['jobOfferLink']
@@ -210,7 +212,6 @@ def upload_cv():
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp:
             file.save(temp)
             temp_file_path = temp.name
-        print(f"File saved temporarily to: {temp_file_path}")
 
         print("Uploading file to Gemini...")
         uploaded_file = client.files.upload(file=temp_file_path)

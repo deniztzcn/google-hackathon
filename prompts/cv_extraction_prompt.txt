@@ -1,0 +1,65 @@
+You are helping with tailoring users' CV. Analyze CV located in PDF. List technologies, skills and past experience from this CV. Make names of technologies, skills and past positions short (preferably one/two word names). List only positions and skills that were explicitly mentioned. Also, give an opinion of this CV, and list possible improvements.
+Output should be in accordance to following json:
+{
+"type": "object",
+"properties": {
+"programing_languages": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"experience": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"technology_stack": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"topics_of_projects": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"soft_skills": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"tech_skills": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"languages": {
+"type": "array",
+"items": {
+"type": "string"
+}
+},
+"opinion": {
+"type": "string"
+},
+"improvements": {
+"type": "array",
+"items": {
+"type": "string"
+}
+}
+},
+"required": [
+"soft_skills",
+"languages",
+"opinion",
+"improvements",
+"tech_skills"
+]
+}

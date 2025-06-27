@@ -179,9 +179,22 @@ Output should be in accordance to following json:
 
 
 promt_to_convert_json_to_text_result ="""
-
-
-
+Parse following json into a formatted text with emojis. PLEASE CALCULATE SOME MATCH PERCENTAGE IN OUTPUT JSON!!!!
+Consider only these fields: 
+"matchPercentage",
+"missing_skills",
+"Advice",
+"Matching_skills",
+"opinion",
+"improvements"
+Output should be in accordance to following json: 
+"tips":{
+"type": "array"},
+"takeaways":{
+"type": "array"}
+"projects":{
+"type": "array"},
+"matchPercentage": "number"
 """
 
 @app.route('/')
@@ -229,7 +242,8 @@ def upload_cv():
         print(response.text)
         result_job = get_job_description_extracted(job_link)
         comparision_result = compare_cv_and_job(result_cv, result_job)
-        return jsonify(comparision_result), 200
+        result = generate_text_result(comparision_result)
+        return jsonify(result), 200
 
     except Exception as e:
         print(f"An error occurred: {e}")
@@ -268,7 +282,13 @@ def compare_cv_and_job(result_cv, result_job):
     print(response.text)
     return comparision_result
 
-
+def generate_text_result(compare_json):
+    response = client.models.generate_content(model=model, contents=[json.dumps(compare_json), promt_to_convert_json_to_text_result],
+    config={
+        "response_mime_type": "application/json",
+    })
+    print(response.text)
+    return json.loads(response.text)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

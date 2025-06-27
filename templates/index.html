@@ -889,7 +889,7 @@
       formData.append('cvUploaded', cvUploadInput.files[0]);
       formData.append("jobOfferLink", document.getElementById('jobOfferLink').value)
 
-      const response = await fetch("/upload_cv", {
+      let response = await fetch("/upload_cv", {
         method: "POST",
         body: formData}
       );
@@ -900,31 +900,27 @@
       //    c. Send it to your backend endpoint (e.g., using fetch API).
       //    d. Your backend will then call the Gemini API.
       //    e. Wait for the response from your backend.
-      
+      response = await response.json(); 
+      console.log(response)// Assuming your backend returns JSON
       // 3. For now, we'll just SIMULATE a 3-second API call.
       setTimeout(() => {
         // This is where you would use the real data from Gemini
         const mockData = {
-          matchPercentage: 82,
+          matchPercentage: parseInt(response.matchPercentage),
           takeaways: [
-            "Your experience with React and Node.js is a strong match for the job requirements.",
-            "The projects on your GitHub demonstrate proficiency in API integration.",
-            "Your CV is well-structured but lacks quantifiable achievements."
+            ...response.takeaways
           ],
           tips: [
-            "Add metrics to your bullet points. Instead of 'Developed a new feature', write 'Developed a new feature that increased user engagement by 15%'.",
-            "Tailor your summary at the top of the CV to explicitly mention the company and role you're applying for.",
-            "Highlight your 'TypeScript' skill more prominently, as it's listed as a key requirement in the job offer."
+            ...response.tips
           ],
           projects: [
-            "Build a small full-stack application using a PostgreSQL database, as the offer mentions 'experience with relational databases'.",
-            "Contribute to an open-source library related to data visualization (e.g., D3.js) to showcase your frontend skills beyond framework usage."
+            ...response.projects
           ]
         };
         
         displayResults(mockData);
         setLoadingState(false);
-      }, 3000); // Simulate 3 second delay
+      }); // Simulate 3 second delay
     });
 
     function setLoadingState(isLoading) {

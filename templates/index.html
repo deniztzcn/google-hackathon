@@ -1,386 +1,852 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CVMatchAI - Your AI Career Co-Pilot</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CVMatchAI - Your AI Career Co-Pilot</title>
 
-  <style>
-    /* --- CSS Variables for easy themeing --- */
-    :root {
-      --primary-color: #4A90E2;
-      --primary-hover-color: #357ABD;
-      --secondary-color: #F5F7FA;
-      --text-color: #333;
-      --light-text-color: #777;
-      --border-color: #E0E0E0;
-      --card-bg-color: #FFFFFF;
-      --success-color: #50E3C2;
-      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      --border-radius: 12px;
-    }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    /* --- General Styles --- */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--secondary-color);
-      color: var(--text-color);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 40px 20px;
-    }
+    <style>
+        /* --- CSS Variables for easy themeing (Light Mode Default) --- */
+        :root {
+            --primary-color: #4A90E2;
+            --primary-hover-color: #357ABD;
+            --secondary-color: #F5F7FA;
+            --text-color: #333;
+            --light-text-color: #777;
+            --border-color: #E0E0E0;
+            --card-bg-color: #FFFFFF;
+            --success-color: #50E3C2;
+            --error-color: #dc3545;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+            --input-focus-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+            --placeholder-color: #B0B0B0;
+            --header-bg-color: #FFFFFF; /* New variable for header background */
+            --nav-button-color: #555;
+            --nav-button-hover-bg: #E0E0E0;
+            --background-gradient-start: #fbfbfb;
+            --background-gradient-end: #e0e0e0;
+            --card-gradient-start: #FFFFFF;
+            --card-gradient-end: #F8F8F8;
+        }
 
-    /* --- Main Layout --- */
-    .container {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 30px;
-      width: 100%;
-      max-width: 1400px;
-    }
+        /* --- Dark Mode Variables --- */
+        body.dark-mode {
+            --primary-color: #64B5F6; /* Lighter blue for contrast */
+            --primary-hover-color: #42A5F5;
+            --secondary-color: #1A202C; /* Dark background */
+            --text-color: #E2E8F0; /* Light text */
+            --light-text-color: #A0AEC0; /* Lighter grey text */
+            --border-color: #4A5568; /* Darker border */
+            --card-bg-color: #2D3748; /* Dark card background */
+            --success-color: #69F0AE; /* Brighter green */
+            --error-color: #EF5350; /* Brighter red */
+            --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            --input-focus-shadow: 0 0 0 3px rgba(100, 181, 246, 0.3);
+            --placeholder-color: #718096;
+            --header-bg-color: #202631; /* Darker background for header */
+            --nav-button-color: #E2E8F0;
+            --nav-button-hover-bg: #4A5568;
+            --background-gradient-start: #1a202c;
+            --background-gradient-end: #2d3748;
+            --card-gradient-start: #2D3748;
+            --card-gradient-end: #252D3A; /* slightly darker for a subtle effect */
+        }
 
-    /* --- Card Style --- */
-    .card {
-      background-color: var(--card-bg-color);
-      border-radius: var(--border-radius);
-      box-shadow: var(--card-shadow);
-      padding: 30px;
-    }
-    
-    /* --- Input Panel (Left Side) --- */
-    .input-panel h1 {
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
+        /* --- General Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .input-panel .subtitle {
-      font-size: 16px;
-      color: var(--light-text-color);
-      margin-bottom: 30px;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, var(--background-gradient-start), var(--background-gradient-end));
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column; /* Changed to column to stack header and main content */
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0; /* Removed padding here, header will handle its own */
+            transition: background 0.5s ease, color 0.3s ease; /* Smooth transition for gradient */
+            scroll-behavior: smooth; /* Smooth scrolling for anchor links */
+        }
 
-    .form-group {
-      margin-bottom: 20px;
-    }
+        /* --- Top Header for Navigation and Theme Switch --- */
+        .app-top-header {
+            width: 100%;
+            background-color: var(--header-bg-color);
+            box-shadow: var(--card-shadow);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 20px; /* Gap between nav and switcher */
+            margin-bottom: 30px; /* Space between header and main content */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      font-size: 14px;
-    }
-    
-    .form-group label i {
-        margin-right: 8px;
-        color: var(--primary-color);
-    }
+        .main-nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
 
-    .form-group input[type="url"],
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
+        .nav-button {
+            text-decoration: none;
+            color: var(--nav-button-color);
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-    .form-group input[type="url"]:focus,
-    .form-group textarea:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-    }
-    
-    /* Custom File Input */
-    .file-input-wrapper {
-        position: relative;
-        overflow: hidden;
-        display: inline-block;
-        width: 100%;
-        border: 1px dashed var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: border-color 0.3s, background-color 0.3s;
-    }
-    .file-input-wrapper:hover {
-        border-color: var(--primary-color);
-        background-color: #F8FAFC;
-    }
-    .file-input-wrapper input[type="file"] {
-        position: absolute;
-        left: 0;
-        top: 0;
-        opacity: 0;
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
-    }
-    .file-input-label {
-        color: var(--light-text-color);
-    }
-    #fileName {
-        margin-top: 10px;
-        font-weight: 500;
-        color: var(--primary-color);
-    }
+        .nav-button:hover {
+            background-color: var(--nav-button-hover-bg);
+            color: var(--primary-color); /* Primary color on hover for text */
+        }
 
 
-    /* --- Submit Button --- */
-    .submit-button {
-      width: 100%;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: 600;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
+        /* --- Main Layout --- */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 20px 40px; /* Add padding to container now */
+        }
 
-    .submit-button:hover:not(:disabled) {
-      background-color: var(--primary-hover-color);
-      transform: translateY(-2px);
-    }
-    
-    .submit-button:disabled {
-        background-color: #B0C4DE;
-        cursor: not-allowed;
-    }
+        /* --- Card Style --- */
+        .card {
+            background: linear-gradient(to bottom right, var(--card-gradient-start), var(--card-gradient-end)); /* Added gradient to cards */
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    /* Spinner animation */
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-    .hidden {
-      display: none;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+        /* --- Header and Logo --- */
+        .app-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-hover-color));
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon svg {
+            width: 70%;
+            height: 70%;
+            color: white;
+            transform: rotate(-15deg);
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(45deg);
+            filter: blur(10px);
+        }
+
+        .app-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* --- Input Panel (Left Side) --- */
+        .input-panel .subtitle {
+            font-size: 16px;
+            color: var(--light-text-color);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: var(--card-bg-color); /* Kept solid for input background for clarity */
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        .form-group input[type="url"]::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--placeholder-color);
+        }
+
+        .form-group input[type="url"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: var(--input-focus-shadow);
+        }
+
+        /* Custom File Input */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--primary-color);
+            background-color: var(--secondary-color);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            color: var(--light-text-color);
+            font-size: 14px;
+        }
+
+        #fileName {
+            margin-top: 10px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
 
 
-    /* --- Output Panel (Right Side) --- */
-    .output-panel {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    #output-placeholder {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        text-align: center;
-        color: var(--light-text-color);
-    }
+        /* --- Submit Button --- */
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
 
-    #output-placeholder i {
-        font-size: 50px;
-        color: var(--border-color);
-        margin-bottom: 20px;
-    }
+        .submit-button:hover:not(:disabled) {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+        }
 
-    /* --- Results Styling --- */
-    #output-results h2 {
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
-    
-    .result-section {
-        margin-bottom: 25px;
-    }
-    
-    .result-section h3 {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 15px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 8px;
-    }
-    
-    .match-score {
-        text-align: center;
-    }
-    
-    .match-score .score-text {
-        font-size: 48px;
-        font-weight: 700;
-        color: var(--primary-color);
-    }
-    
-    .progress-bar {
-        width: 100%;
-        height: 15px;
-        background-color: var(--secondary-color);
-        border-radius: 10px;
-        overflow: hidden;
-        margin-top: 10px;
-    }
-    
-    .progress-bar-fill {
-        width: 0; /* Updated by JS */
-        height: 100%;
-        background-color: var(--success-color);
-        border-radius: 10px;
-        transition: width 1.5s ease-in-out;
-    }
+        .submit-button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
 
-    .result-section ul {
-        list-style-type: none;
-        padding-left: 0;
-    }
+        /* Spinner animation */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
 
-    .result-section ul li {
-        background-color: var(--secondary-color);
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .result-section ul li i {
-        margin-right: 12px;
-        font-size: 16px;
-    }
-    
-    .fa-check-circle { color: #28a745; }
-    .fa-times-circle { color: #dc3545; }
-    .fa-lightbulb { color: #ffc107; }
-    .fa-cogs { color: #6f42c1; }
+        .hidden {
+            display: none !important;
+        }
 
-    /* --- Responsive Design --- */
-    @media (max-width: 992px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-      body {
-        padding: 20px 10px;
-      }
-    }
-  </style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+
+        /* --- Output Panel (Right Side) --- */
+        .output-panel {
+            display: flex;
+            flex-direction: column;
+            min-height: 400px; /* Ensure a minimum height for the output panel */
+        }
+
+        #output-placeholder {
+            flex-grow: 1; /* Allows it to take up available space */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            color: var(--light-text-color);
+            padding: 20px;
+        }
+
+        #output-placeholder i {
+            font-size: 60px;
+            color: var(--border-color);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        #output-loading {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin: auto;
+            padding: 20px;
+        }
+
+        #output-loading i {
+            font-size: 60px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        #output-results {
+            flex-grow: 1; /* Allows it to take up available space */
+            padding-top: 10px; /* Adjust padding if needed */
+        }
+
+        #output-results h2 {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .result-section {
+            margin-bottom: 25px;
+        }
+
+        .result-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+        }
+
+        .match-score {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .match-score .score-text {
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar-fill {
+            width: 0; /* Updated by JS */
+            height: 100%;
+            background: linear-gradient(to right, var(--success-color), #20c997);
+            border-radius: 10px;
+            transition: width 1.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 12px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .result-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .result-section ul li {
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .result-section ul li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-section ul li i {
+            margin-right: 0; /* Adjusted for gap */
+            font-size: 18px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        .fa-check-circle {
+            color: var(--success-color);
+        }
+
+        .fa-times-circle {
+            color: var(--error-color);
+        }
+
+        .fa-lightbulb {
+            color: #FFD700; /* Gold-like color */
+        }
+
+        .fa-cogs {
+            color: #8A2BE2; /* BlueViolet */
+        }
+
+        /* --- Theme Toggle Switch --- */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-color);
+            font-size: 14px;
+            /* Removed absolute positioning as it's now in the header */
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: var(--border-color);
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 4px;
+            content: "";
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            width: 26px;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Responsive icons inside slider */
+        .slider .fa-sun, .slider .fa-moon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: white;
+            transition: opacity 0.4s ease;
+        }
+        .slider .fa-sun {
+            left: 8px;
+            color: var(--text-color);
+            opacity: 1;
+        }
+        .slider .fa-moon {
+            right: 8px;
+            color: white;
+            opacity: 0;
+        }
+        input:checked + .slider .fa-sun {
+            opacity: 0;
+        }
+        input:checked + .slider .fa-moon {
+            opacity: 1;
+        }
+
+        /* --- About Us Section --- */
+        .about-us-section {
+            width: 100%;
+            max-width: 1400px;
+            padding: 60px 40px;
+            margin-top: 50px;
+            background: linear-gradient(to top left, var(--card-bg-color), var(--secondary-color)); /* Gradient background for section */
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .about-us-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .about-us-section p {
+            font-size: 18px;
+            color: var(--text-color);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+        }
+
+        .about-us-section ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .about-us-section ul li {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+        body.dark-mode .about-us-section ul li {
+            background-color: var(--border-color); /* Lighter dark for list items */
+        }
+
+        .about-us-section ul li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+
+        /* --- Responsive Design --- */
+        @media (max-width: 992px) {
+            .app-top-header {
+                flex-direction: column;
+                padding: 15px 20px;
+                gap: 15px;
+            }
+            .main-nav {
+                justify-content: center;
+                width: 100%;
+            }
+            .container {
+                grid-template-columns: 1fr;
+                padding: 0 10px 20px; /* Adjust padding for smaller screens */
+            }
+
+            .theme-switch-wrapper {
+                position: static; /* Position normally within flow */
+                margin-top: 0; /* No extra margin needed here */
+                justify-content: center;
+            }
+            .about-us-section {
+                padding: 40px 20px;
+            }
+            .about-us-section h2 {
+                font-size: 28px;
+            }
+            .about-us-section p {
+                font-size: 16px;
+            }
+            .about-us-section ul li {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+
+            .app-header h1 {
+                font-size: 26px;
+            }
+
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+
+            .input-panel h1 {
+                font-size: 24px;
+            }
+
+            .output-results h2 {
+                font-size: 20px;
+            }
+
+            .match-score .score-text {
+                font-size: 48px;
+            }
+
+            .nav-button {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .about-us-section h2 {
+                font-size: 24px;
+            }
+            .about-us-section p {
+                font-size: 14px;
+            }
+            .about-us-section ul li {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-<body>
-  <main class="container">
-    <div class="card input-panel">
-      <h1>CVMatchAI</h1>
-      <p class="subtitle">Your AI-powered career co-pilot. Get an instant analysis of your CV against any job offer.</p>
-      
-      <form id="cvmatchForm">
-        <div class="form-group">
-          <label for="jobOfferLink"><i class="fa-solid fa-briefcase"></i>Job Offer Link:</label>
-          <input type="url" id="jobOfferLink" name="jobOfferLink" placeholder="https://example.com/job/123" required>
+<body class="dark-mode"> <!-- Default to dark mode -->
+    <header class="app-top-header">
+        <nav class="main-nav">
+            <a href="#" class="nav-button">Log In</a>
+            <a href="#" class="nav-button">Sign Up</a>
+            <a href="#" class="nav-button">History</a>
+            <a href="#about-us-section" class="nav-button">About Us</a>
+        </nav>
+        <div class="theme-switch-wrapper">
+            <i class="fa-solid fa-sun" style="color: #FFD700;"></i>
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+            </label>
+            <i class="fa-solid fa-moon" style="color: #64B5F6;"></i>
         </div>
+    </header>
 
-        <div class="form-group">
-          <label for="cvUpload"><i class="fa-solid fa-file-pdf"></i>Upload Your CV (PDF):</label>
-          <div class="file-input-wrapper">
-              <input type="file" id="cvUpload" name="cvUpload" accept=".pdf" required>
-              <span id="file-input-label" class="file-input-label">Click or drag & drop to upload</span>
-              <div id="fileName"></div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="githubLink"><i class="fa-brands fa-github"></i>GitHub Profile Link: (Optional)</label>
-          <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/your-username">
-        </div>
-        
-        <div class="form-group">
-            <label for="linkedinLink"><i class="fa-brands fa-linkedin"></i>LinkedIn Profile Link: (Optional)</label>
-            <input type="url" id="linkedinLink" name="linkedinLink" placeholder="https://linkedin.com/in/your-profile">
-        </div>
-
-        <div class="form-group">
-          <label for="additionalPrompt"><i class="fa-solid fa-plus"></i>Additional Information:</label>
-          <textarea id="additionalPrompt" name="additionalPrompt" rows="3" placeholder="e.g. Focus on my backend skills."></textarea>
-        </div>
-        
-        <button type="button" id="runButton" class="submit-button">
-          <span id="buttonText">Analyze My Match</span>
-          <div id="spinner" class="spinner hidden"></div>
-        </button>
-      </form>
-    </div>
-
-    <div class="card output-panel">
-        
-        <div id="output-placeholder">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <h2>Your Analysis Will Appear Here</h2>
-            <p>Fill in the details on the left and click "Analyze" to see the magic happen!</p>
-        </div>
-        
-        <div id="output-loading" class="hidden" style="text-align: center; margin: auto;">
-             <i class="fa-solid fa-robot fa-beat-fade" style="font-size: 50px; color: var(--primary-color); margin-bottom: 20px;"></i>
-             <h2>Gemini is analyzing your profile...</h2>
-             <p>This may take a moment. We're extracting skills, comparing experiences, and crafting personalized advice.</p>
-        </div>
-
-        <div id="output-results" class="hidden">
-          <h2>Analysis Results</h2>
-          
-          <div class="result-section match-score">
-            <h3>Overall Match Score</h3>
-            <p class="score-text" id="match-percentage">82%</p>
-            <div class="progress-bar">
-              <div class="progress-bar-fill" id="progress-fill"></div>
+    <main class="container">
+        <div class="card input-panel">
+            <div class="app-header">
+                <div class="logo-icon">
+                    <!-- SVG for logo, representing a CV and an AI brain/chip -->
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L6 5V19L12 22L18 19V5L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 8L8 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8 8L16 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1>CVMatchAI</h1>
             </div>
-          </div>
-          
-          <div class="result-section">
-              <h3><i class="fa-solid fa-award"></i>Key Takeaways</h3>
-              <ul id="takeaways-list">
-                  </ul>
-          </div>
-          
-          <div class="result-section">
-            <h3><i class="fa-solid fa-lightbulb"></i>CV Improvement Tips</h3>
-            <ul id="tips-list">
-              </ul>
-          </div>
-          
-          <div class="result-section">
-            <h3><i class="fa-solid fa-cogs"></i>Suggested Projects for Your Portfolio</h3>
-            <ul id="projects-list">
-              </ul>
-          </div>
-        </div>
-    </div>
-  </main>
+            <p class="subtitle">Your AI-powered career co-pilot. Get an instant analysis of your CV against any job offer.</p>
 
-  <script>
+            <form id="cvmatchForm">
+                <div class="form-group">
+                    <label for="jobOfferLink"><i class="fa-solid fa-briefcase"></i>Job Offer Link:</label>
+                    <input type="url" id="jobOfferLink" name="jobOfferLink" placeholder="https://example.com/job/123" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cvUpload"><i class="fa-solid fa-file-pdf"></i>Upload Your CV (PDF):</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="cvUpload" name="cvUpload" accept=".pdf" required>
+                        <span id="file-input-label" class="file-input-label">Click or drag & drop to upload</span>
+                        <div id="fileName"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="githubLink"><i class="fa-brands fa-github"></i>GitHub Profile Link: (Optional)</label>
+                    <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/your-username">
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedinLink"><i class="fa-brands fa-linkedin"></i>LinkedIn Profile Link: (Optional)</label>
+                    <input type="url" id="linkedinLink" name="linkedinLink" placeholder="https://linkedin.com/in/your-profile">
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalPrompt"><i class="fa-solid fa-plus"></i>Additional Information:</label>
+                    <textarea id="additionalPrompt" name="additionalPrompt" rows="3" placeholder="e.g. Focus on my backend skills."></textarea>
+                </div>
+
+                <button type="button" id="runButton" class="submit-button">
+                    <span id="buttonText">Analyze My Match</span>
+                    <div id="spinner" class="spinner hidden"></div>
+                </button>
+            </form>
+        </div>
+
+        <div class="card output-panel">
+
+            <div id="output-placeholder">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <h2>Your Analysis Will Appear Here</h2>
+                <p>Fill in the details on the left and click "Analyze" to see the magic happen!</p>
+            </div>
+
+            <div id="output-loading" class="hidden">
+                <i class="fa-solid fa-robot fa-beat-fade"></i>
+                <h2>Gemini is analyzing your profile...</h2>
+                <p>This may take a moment. We're extracting skills, comparing experiences, and crafting personalized advice.</p>
+            </div>
+
+            <div id="output-results" class="hidden">
+                <h2>Analysis Results</h2>
+
+                <div class="result-section match-score">
+                    <h3>Overall Match Score</h3>
+                    <p class="score-text" id="match-percentage">0%</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="result-section">
+                    <h3><i class="fa-solid fa-award"></i>Key Takeaways</h3>
+                    <ul id="takeaways-list">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h3><i class="fa-solid fa-lightbulb"></i>CV Improvement Tips</h3>
+                    <ul id="tips-list">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+
+                <div class="result-section">
+                    <h3><i class="fa-solid fa-cogs"></i>Suggested Projects for Your Portfolio</h3>
+                    <ul id="projects-list">
+                        <!-- Dynamically populated -->
+                    </ul>
+                </div>
+            </div>
+            <!-- Message box for alerts -->
+            <div id="messageBox" class="hidden" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--card-bg-color); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--card-shadow); z-index: 1000; text-align: center; max-width: 350px; width: 90%; border: 1px solid var(--border-color);">
+                <p id="messageBoxText" style="margin-bottom: 20px; font-size: 16px; color: var(--text-color);"></p>
+                <button id="messageBoxClose" style="background-color: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease;">OK</button>
+            </div>
+            <div id="overlay" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+        </div>
+    </main>
+
+    <section id="about-us-section" class="about-us-section">
+        <h2>About Us</h2>
+        <p>We are a dynamic team of ambitious students, united by a passion for innovation and a desire to put our skills to the test. Participating in this hackathon, we believe that by combining creativity and technical knowledge, we can create solutions that truly matter. 'CVMatchAI' is our contribution to streamlining career paths, and this project is a testament to our determination and eagerness to learn.</p>
+        <p>And here's our amazing team:</p>
+        <ul>
+            <li>Deniz Tezcan</li>
+            <li>Wiktor Lewicki</li>
+            <li>Jakub Rak</li>
+            <li>Anton Libik</li>
+        </ul>
+    </section>
+
+    <script>
     // --- Get DOM Elements ---
     const form = document.getElementById('cvmatchForm');
     const runButton = document.getElementById('runButton');

@@ -2,42 +2,511 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CVMatchAI Input</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CVMatchAI - Your AI Career Co-Pilot</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; }
-    input[type="text"], input[type="url"], textarea { width: 100%; padding: 8px; box-sizing: border-box; }
-    button { padding: 10px 20px; font-size: 16px; }
+    /* --- CSS Variables for easy themeing --- */
+    :root {
+      --primary-color: #4A90E2;
+      --primary-hover-color: #357ABD;
+      --secondary-color: #F5F7FA;
+      --text-color: #333;
+      --light-text-color: #777;
+      --border-color: #E0E0E0;
+      --card-bg-color: #FFFFFF;
+      --success-color: #50E3C2;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --border-radius: 12px;
+    }
+
+    /* --- General Styles --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* --- Main Layout --- */
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 30px;
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    /* --- Card Style --- */
+    .card {
+      background-color: var(--card-bg-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 30px;
+    }
+    
+    /* --- Input Panel (Left Side) --- */
+    .input-panel h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .input-panel .subtitle {
+      font-size: 16px;
+      color: var(--light-text-color);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    
+    .form-group label i {
+        margin-right: 8px;
+        color: var(--primary-color);
+    }
+
+    .form-group input[type="url"],
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input[type="url"]:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    }
+    
+    /* Custom File Input */
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+        border: 1px dashed var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+    .file-input-wrapper:hover {
+        border-color: var(--primary-color);
+        background-color: #F8FAFC;
+    }
+    .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    .file-input-label {
+        color: var(--light-text-color);
+    }
+    #fileName {
+        margin-top: 10px;
+        font-weight: 500;
+        color: var(--primary-color);
+    }
+
+
+    /* --- Submit Button --- */
+    .submit-button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      background-color: var(--primary-hover-color);
+      transform: translateY(-2px);
+    }
+    
+    .submit-button:disabled {
+        background-color: #B0C4DE;
+        cursor: not-allowed;
+    }
+
+    /* Spinner animation */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    .hidden {
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+    /* --- Output Panel (Right Side) --- */
+    .output-panel {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    #output-placeholder {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        color: var(--light-text-color);
+    }
+
+    #output-placeholder i {
+        font-size: 50px;
+        color: var(--border-color);
+        margin-bottom: 20px;
+    }
+
+    /* --- Results Styling --- */
+    #output-results h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .result-section {
+        margin-bottom: 25px;
+    }
+    
+    .result-section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+    }
+    
+    .match-score {
+        text-align: center;
+    }
+    
+    .match-score .score-text {
+        font-size: 48px;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 15px;
+        background-color: var(--secondary-color);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    
+    .progress-bar-fill {
+        width: 0; /* Updated by JS */
+        height: 100%;
+        background-color: var(--success-color);
+        border-radius: 10px;
+        transition: width 1.5s ease-in-out;
+    }
+
+    .result-section ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    .result-section ul li {
+        background-color: var(--secondary-color);
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .result-section ul li i {
+        margin-right: 12px;
+        font-size: 16px;
+    }
+    
+    .fa-check-circle { color: #28a745; }
+    .fa-times-circle { color: #dc3545; }
+    .fa-lightbulb { color: #ffc107; }
+    .fa-cogs { color: #6f42c1; }
+
+    /* --- Responsive Design --- */
+    @media (max-width: 992px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 20px 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>CVMatchAI</h1>
-  <form id="cvmatchForm">
-    <div class="form-group">
-      <label for="jobOfferLink">Job Offer Link:</label>
-      <input type="url" id="jobOfferLink" name="jobOfferLink" placeholder="https://example.com/job/123" required>
+  <main class="container">
+    <div class="card input-panel">
+      <h1>CVMatchAI</h1>
+      <p class="subtitle">Your AI-powered career co-pilot. Get an instant analysis of your CV against any job offer.</p>
+      
+      <form id="cvmatchForm">
+        <div class="form-group">
+          <label for="jobOfferLink"><i class="fa-solid fa-briefcase"></i>Job Offer Link:</label>
+          <input type="url" id="jobOfferLink" name="jobOfferLink" placeholder="https://example.com/job/123" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cvUpload"><i class="fa-solid fa-file-pdf"></i>Upload Your CV (PDF):</label>
+          <div class="file-input-wrapper">
+              <input type="file" id="cvUpload" name="cvUpload" accept=".pdf" required>
+              <span id="file-input-label" class="file-input-label">Click or drag & drop to upload</span>
+              <div id="fileName"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="githubLink"><i class="fa-brands fa-github"></i>GitHub Profile Link: (Optional)</label>
+          <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/your-username">
+        </div>
+        
+        <div class="form-group">
+            <label for="linkedinLink"><i class="fa-brands fa-linkedin"></i>LinkedIn Profile Link: (Optional)</label>
+            <input type="url" id="linkedinLink" name="linkedinLink" placeholder="https://linkedin.com/in/your-profile">
+        </div>
+
+        <div class="form-group">
+          <label for="additionalPrompt"><i class="fa-solid fa-plus"></i>Additional Information:</label>
+          <textarea id="additionalPrompt" name="additionalPrompt" rows="3" placeholder="e.g. Focus on my backend skills."></textarea>
+        </div>
+        
+        <button type="button" id="runButton" class="submit-button">
+          <span id="buttonText">Analyze My Match</span>
+          <div id="spinner" class="spinner hidden"></div>
+        </button>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="cvUpload">Upload Your CV (PDF):</label>
-      <input type="file" id="cvUpload" name="cvUpload" accept=".pdf" required>
+
+    <div class="card output-panel">
+        
+        <div id="output-placeholder">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <h2>Your Analysis Will Appear Here</h2>
+            <p>Fill in the details on the left and click "Analyze" to see the magic happen!</p>
+        </div>
+        
+        <div id="output-loading" class="hidden" style="text-align: center; margin: auto;">
+             <i class="fa-solid fa-robot fa-beat-fade" style="font-size: 50px; color: var(--primary-color); margin-bottom: 20px;"></i>
+             <h2>Gemini is analyzing your profile...</h2>
+             <p>This may take a moment. We're extracting skills, comparing experiences, and crafting personalized advice.</p>
+        </div>
+
+        <div id="output-results" class="hidden">
+          <h2>Analysis Results</h2>
+          
+          <div class="result-section match-score">
+            <h3>Overall Match Score</h3>
+            <p class="score-text" id="match-percentage">82%</p>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+          </div>
+          
+          <div class="result-section">
+              <h3><i class="fa-solid fa-award"></i>Key Takeaways</h3>
+              <ul id="takeaways-list">
+                  </ul>
+          </div>
+          
+          <div class="result-section">
+            <h3><i class="fa-solid fa-lightbulb"></i>CV Improvement Tips</h3>
+            <ul id="tips-list">
+              </ul>
+          </div>
+          
+          <div class="result-section">
+            <h3><i class="fa-solid fa-cogs"></i>Suggested Projects for Your Portfolio</h3>
+            <ul id="projects-list">
+              </ul>
+          </div>
+        </div>
     </div>
-    <div class="form-group">
-      <label for="githubLink">GitHub Profile Link:</label>
-      <input type="url" id="githubLink" name="githubLink" placeholder="https://github.com/username">
-    </div>
-    <div class="form-group">
-      <label for="additionalPrompt">Additional Prompt:</label>
-      <textarea id="additionalPrompt" name="additionalPrompt" rows="4" placeholder="Any additional info or requirements"></textarea>
-    </div>
-    <button type="button" id="runButton">Run</button>
-  </form>
+  </main>
+
   <script>
-    document.getElementById('runButton').addEventListener('click', () => {
-      // TODO: Implement the logic to handle form submission
-      alert('Run clicked!');
+    // --- Get DOM Elements ---
+    const form = document.getElementById('cvmatchForm');
+    const runButton = document.getElementById('runButton');
+    const buttonText = document.getElementById('buttonText');
+    const spinner = document.getElementById('spinner');
+    const allInputs = form.querySelectorAll('input, textarea');
+    
+    const cvUploadInput = document.getElementById('cvUpload');
+    const fileInputLabel = document.getElementById('file-input-label');
+    const fileNameDisplay = document.getElementById('fileName');
+
+    const outputPlaceholder = document.getElementById('output-placeholder');
+    const outputLoading = document.getElementById('output-loading');
+    const outputResults = document.getElementById('output-results');
+
+    // --- Logic for file input label ---
+    cvUploadInput.addEventListener('change', () => {
+        if (cvUploadInput.files.length > 0) {
+            fileNameDisplay.textContent = cvUploadInput.files[0].name;
+            fileInputLabel.classList.add('hidden');
+        } else {
+            fileNameDisplay.textContent = '';
+            fileInputLabel.classList.remove('hidden');
+        }
     });
+
+    // --- Main "Run" Button Logic ---
+    runButton.addEventListener('click', () => {
+      // Basic validation
+      if (!form.checkValidity()) {
+        alert('Please fill in all required fields (Job Offer Link and CV).');
+        return;
+      }
+      
+      // 1. Show Loading State
+      setLoadingState(true);
+
+      // 2. TODO: Here is where you will:
+      //    a. Get all the data from the form (links, file, prompt).
+      //    b. Use FormData to package it.
+      //    c. Send it to your backend endpoint (e.g., using fetch API).
+      //    d. Your backend will then call the Gemini API.
+      //    e. Wait for the response from your backend.
+      
+      // 3. For now, we'll just SIMULATE a 3-second API call.
+      setTimeout(() => {
+        // This is where you would use the real data from Gemini
+        const mockData = {
+          matchPercentage: 82,
+          takeaways: [
+            "Your experience with React and Node.js is a strong match for the job requirements.",
+            "The projects on your GitHub demonstrate proficiency in API integration.",
+            "Your CV is well-structured but lacks quantifiable achievements."
+          ],
+          tips: [
+            "Add metrics to your bullet points. Instead of 'Developed a new feature', write 'Developed a new feature that increased user engagement by 15%'.",
+            "Tailor your summary at the top of the CV to explicitly mention the company and role you're applying for.",
+            "Highlight your 'TypeScript' skill more prominently, as it's listed as a key requirement in the job offer."
+          ],
+          projects: [
+            "Build a small full-stack application using a PostgreSQL database, as the offer mentions 'experience with relational databases'.",
+            "Contribute to an open-source library related to data visualization (e.g., D3.js) to showcase your frontend skills beyond framework usage."
+          ]
+        };
+        
+        displayResults(mockData);
+        setLoadingState(false);
+      }, 3000); // Simulate 3 second delay
+    });
+
+    function setLoadingState(isLoading) {
+      if (isLoading) {
+        // Disable form
+        runButton.disabled = true;
+        allInputs.forEach(input => input.disabled = true);
+        
+        // Update button
+        buttonText.classList.add('hidden');
+        spinner.classList.remove('hidden');
+        
+        // Update output panel
+        outputPlaceholder.classList.add('hidden');
+        outputResults.classList.add('hidden');
+        outputLoading.classList.remove('hidden');
+      } else {
+        // Enable form
+        runButton.disabled = false;
+        allInputs.forEach(input => input.disabled = false);
+        
+        // Update button
+        spinner.classList.add('hidden');
+        buttonText.classList.remove('hidden');
+        
+        // Update output panel
+        outputLoading.classList.add('hidden');
+        outputResults.classList.remove('hidden');
+      }
+    }
+    
+    function displayResults(data) {
+        // --- Populate Match Score ---
+        const percentageEl = document.getElementById('match-percentage');
+        const progressFillEl = document.getElementById('progress-fill');
+        
+        percentageEl.textContent = `${data.matchPercentage}%`;
+        // Animate the progress bar fill
+        setTimeout(() => {
+           progressFillEl.style.width = `${data.matchPercentage}%`;
+        }, 100); // Small delay to ensure transition is applied
+
+        // --- Populate Lists ---
+        populateList('takeaways-list', data.takeaways, 'fa-solid fa-award');
+        populateList('tips-list', data.tips, 'fa-solid fa-lightbulb');
+        populateList('projects-list', data.projects, 'fa-solid fa-cogs');
+    }
+    
+    function populateList(elementId, items, iconClass) {
+        const listEl = document.getElementById(elementId);
+        listEl.innerHTML = ''; // Clear previous results
+        items.forEach(itemText => {
+            const li = document.createElement('li');
+            li.innerHTML = `<i class="${iconClass}"></i><span>${itemText}</span>`;
+            listEl.appendChild(li);
+        });
+    }
+
   </script>
 </body>
 </html>

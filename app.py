@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # === Configuration ===
 API_KEY = "AIzaSyCCRQSEJWrUz8q_j6dqne71Y-ePtX1-HyM"
-MODEL_NAME = "gemini-2.5-flash"
+model = "gemini-2.5-flash"
 client = genai.Client(api_key=API_KEY)
 # This is the prompt that tells the AI what to do
 prompt_to_cv_data_extract = """
@@ -256,7 +256,7 @@ def get_job_description_extracted(job_link: str):
                                                   "response_mime_type": "application/json",
                                               })
     result_job = json.loads(response.text)
-    print(result_job)
+    print(response.text)
     return result_job
 
 def compare_cv_and_job(result_cv, result_job):
@@ -265,10 +265,9 @@ def compare_cv_and_job(result_cv, result_job):
                                                   "response_mime_type": "application/json",
                                               })
     comparision_result = json.loads(response.text)
-    print(comparision_result)
+    print(response.text)
     return comparision_result
 
-def generate_text_from_json_resulot(json_result):
 
 
 if __name__ == "__main__":

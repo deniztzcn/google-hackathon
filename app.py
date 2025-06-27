@@ -17,18 +17,21 @@ def upload_cv():
     Handles CV file upload. For this MVP, it just confirms receipt of the file.
     Actual PDF parsing would happen here in a full application.
     """
-    if 'cvFile' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-    file = request.files['cvFile']
+    if 'cvUploaded' not in request.files:
+        return jsonify({'error': 'No CV file part in the request'}), 400
+        
+    file = request.files['cvUploaded']
+
+    # If the user does not select a file, the browser submits an
+    # empty file without a filename.
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
+
     if file:
-        # In a real app, you would save and process the PDF here.
-        # For this MVP, we're just acknowledging the upload.
-        # The user should provide CV text via the textarea for analysis.
         print(f"Received CV file: {file.filename}. (Actual PDF parsing not implemented in MVP).")
-        return jsonify({'message': f'File {file.filename} received. Please ensure to paste CV text for analysis.'}), 200
-    return jsonify({'error': 'File upload failed'}), 500
+
+    return jsonify({'message': f'File {file.filename} received. Please ensure to paste CV text for analysis.'}), 200
+    #return jsonify({'error': 'File upload failed'}), 500
 
 
 

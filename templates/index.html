@@ -408,7 +408,7 @@
     });
 
     // --- Main "Run" Button Logic ---
-    runButton.addEventListener('click', () => {
+    runButton.addEventListener('click', async () => {
       // Basic validation
       if (!form.checkValidity()) {
         alert('Please fill in all required fields (Job Offer Link and CV).');
@@ -417,6 +417,14 @@
       
       // 1. Show Loading State
       setLoadingState(true);
+
+      const formData = new FormData();
+      formData.append('cvUploaded', cvUploadInput.files[0]);
+
+      const response = await fetch("/upload_cv", {
+        method: "POST",
+        body: formData}
+      );
 
       // 2. TODO: Here is where you will:
       //    a. Get all the data from the form (links, file, prompt).

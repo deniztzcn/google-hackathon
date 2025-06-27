@@ -855,6 +855,7 @@
     const allInputs = form.querySelectorAll('input, textarea');
     
     const cvUploadInput = document.getElementById('cvUpload');
+
     const fileInputLabel = document.getElementById('file-input-label');
     const fileNameDisplay = document.getElementById('fileName');
 
@@ -886,6 +887,7 @@
 
       const formData = new FormData();
       formData.append('cvUploaded', cvUploadInput.files[0]);
+      formData.append("jobOfferLink", document.getElementById('jobOfferLink').value)
 
       const response = await fetch("/upload_cv", {
         method: "POST",

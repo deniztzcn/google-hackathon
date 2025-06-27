@@ -1,7 +1,16 @@
+import os
 from flask import Flask, render_template, request, jsonify
+from dotenv import load_dotenv
+import google.generativeai as genai
+
 
 app = Flask(__name__)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY environment variable not set. Please set it in your .env file.")
+
+genai.configure(api_key=GEMINI_API_KEY)
 
 @app.route('/')
 def index():
